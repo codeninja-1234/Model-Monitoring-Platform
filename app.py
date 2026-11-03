@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
@@ -6,6 +5,7 @@ from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTEN
 from time import perf_counter
 
 app = Flask(__name__)
+
 bundle = joblib.load("model.joblib")
 model, FEATURES = bundle["model"], bundle["features"]
 
@@ -13,6 +13,22 @@ REQUESTS = Counter("model_prediction_requests_total", "Total prediction requests
 LATENCY = Histogram("model_prediction_latency_seconds", "Prediction latency")
 APPROVAL_RATE = Gauge("model_prediction_approval_rate", "Rolling approval rate")
 ERRORS = Counter("model_prediction_errors_total", "Prediction errors")
+
+ACCURACY = Gauge("model_monitor_accuracy", "Model accuracy by simulation month", ["month"])
+FAIRNESS_GAP = Gauge("model_monitor_fairness_gap", "Fairness TPR gap by simulation month", ["month"])
+DRIFT_SHARE = Gauge("model_monitor_drift_share", "Share of drifted features by simulation month", ["month"])
+
+try:
+    results = pd.read_csv("reports/monthly_metrics.csv")
+    for _, row in results.iterrows():
+        month = str(int(row["month"]))
+        ACCURACY.labels(month=month).set(float(row["accuracy"]))
+        FAIRNESS_GAP.labels(month=month).set(float(row["fairness_gap"]))
+        if pd.notna(row["evidently_drift_share"]):
+            DRIFT_SHARE.labels(month=month).set(float(row["evidently_drift_share"]))
+    print("Six-month model monitoring metrics loaded.")
+except Exception as exc:
+    print("Could not load monitoring results:", exc)
 
 @app.get("/health")
 def health():
