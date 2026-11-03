@@ -1,0 +1,7 @@
+flask==3.1.2
+pandas>=2.2,<3
+numpy>=2.0,<3
+scikit-learn>=1.5,<2
+prometheus-client>=0.21,<1
+evidently==0.7.19
+joblib>=1.4,<2

@@ -1,0 +1,7 @@
+month,evaluation_type,accuracy,precision,recall,f1,fairness_tpr,fairness_gap,evidently_drift_share,drift_detected,alerts
+1,held_out_baseline,0.6967,0.7151,0.7778,0.7451,"{'F': 0.7441860465116279, 'M': 0.8117647058823529}",0.0676,,,[]
+2,monthly_production,0.7092,0.7334,0.7966,0.7637,"{'F': 0.8088642659279779, 'M': 0.7838616714697406}",0.025,0.4,True,['WARNING: Evidently detected feature drift']
+3,monthly_production,0.71,0.7418,0.7714,0.7563,"{'F': 0.7800586510263929, 'M': 0.7632311977715878}",0.0168,0.8,True,['WARNING: Evidently detected feature drift']
+4,monthly_production,0.7267,0.748,0.7954,0.7709,"{'F': 0.7941176470588235, 'M': 0.7966101694915254}",0.0025,0.8,True,['WARNING: Evidently detected feature drift']
+5,monthly_production,0.6933,0.668,0.8003,0.7282,"{'F': 0.8357142857142857, 'M': 0.7708333333333334}",0.0649,1.0,True,"['CRITICAL: accuracy below 0.70', 'WARNING: Evidently detected feature drift']"
+6,monthly_production,0.6625,0.6128,0.7997,0.6939,"{'F': 0.8808510638297873, 'M': 0.7433628318584071}",0.1375,0.8,True,"['CRITICAL: accuracy below 0.70', 'WARNING: fairness TPR gap above 0.12', 'WARNING: Evidently detected feature drift']"
