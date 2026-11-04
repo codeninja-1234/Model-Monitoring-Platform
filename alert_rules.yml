@@ -11,7 +11,7 @@ groups:
           description: "Latest monthly evaluation accuracy is {{ $value }}; verify labels and evaluate rollback."
 
       - alert: FeatureDriftDetected
-        expr: model_monitor_latest_month > 1 and model_monitor_latest_drift_share > 0
+        expr: model_monitor_latest_month > 1 and model_monitor_latest_drift_share >= 0.5
         for: 1m
         labels:
           severity: warning
