@@ -2,15 +2,16 @@ services:
   prometheus:
     image: prom/prometheus:v3.5.0
     ports:
-      - "9090:9090"
+      - "${PROMETHEUS_PORT:-9090}:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
     depends_on:
       - model-api
   grafana:
     image: grafana/grafana:12.1.1
     ports:
-      - "3000:3000"
+      - "${GRAFANA_PORT:-3000}:3000"
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
@@ -22,4 +23,4 @@ services:
   model-api:
     build: .
     ports:
-      - "5001:5001"
+      - "${MODEL_API_PORT:-5001}:5001"

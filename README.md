@@ -1,41 +1,42 @@
 # Model Monitoring Platform
 
-A course project demonstrating production-style monitoring of a deployed binary classification model over six simulated months.
+A reproducible course project that monitors a binary credit-approval classifier over six simulated months. It combines offline data-drift, accuracy and fairness analysis with a Flask prediction API, Prometheus metrics, Grafana dashboards and Prometheus alert rules.
 
-## What it demonstrates
-- Synthetic six-month production data with planted population drift, concept drift and a group-level outcome shift.
-- A baseline scikit-learn model trained on month 1.
-- A Flask prediction API with Prometheus request, latency, error and prediction metrics.
-- Evidently data-drift HTML reports for months 2–6.
-- Offline monthly accuracy, precision, recall, F1 and group fairness analysis.
-- Grafana dashboard provisioned automatically through Docker Compose.
-- Alert runbook and time-to-detection analysis.
+## Features
+
+- 7,200 synthetic records, with month 1 used to train the model and as the drift reference.
+- Planted population drift, increasing concept noise and a group-specific outcome shift.
+- Flask prediction endpoint and Prometheus request, latency, error and prediction metrics.
+- Monthly accuracy, precision, recall, F1, fairness TPR gaps and Evidently reports.
+- Grafana dashboard provisioned at startup with seven panels.
+- Prometheus rules for accuracy degradation, feature drift and fairness violations.
+- Operational guidance in [ALERT_RUNBOOK.md](./ALERT_RUNBOOK.md) and measured results in [PROJECT_REPORT.md](./PROJECT_REPORT.md).
 
 ## Requirements
-- macOS/Linux
-- Python 3.10 or 3.11 recommended
-- Docker Desktop with Docker Compose
 
-## 1. Create environment and install packages
+- Git
+- Docker Desktop with Docker Compose v2 (the recommended path; no local Python install required)
+- Python 3.11 for running the generation, training and monitoring scripts outside Docker
+
+## Quick start from a fresh clone
+
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-pip install -r requirements.txt
+git clone https://github.com/codeninja-1234/Model-Monitoring-Platform.git
+cd Model-Monitoring-Platform
+docker compose up --build -d
+docker compose ps
 ```
 
-## 2. Generate six months of data and train model
-```bash
-python src_generate_data.py
-python src_train_model.py
-```
-The dataset has 7,200 rows (1,200 per month). Month 1 is the reference/training period.
+The model, monthly metrics, data and Grafana/Prometheus configuration are included in the repository. The API image installs its dependencies and loads the checked-in model and monthly results.
 
-## 3. Run offline monitoring
-```bash
-python monitor.py
+The default host ports are 5001 (API), 9090 (Prometheus) and 3000 (Grafana). If one is already in use, set `MODEL_API_PORT`, `PROMETHEUS_PORT` or `GRAFANA_PORT` before starting Compose; for example, in PowerShell:
+
+```powershell
+$env:MODEL_API_PORT = "5002"
+$env:PROMETHEUS_PORT = "9091"
+$env:GRAFANA_PORT = "3001"
+docker compose up --build -d
 ```
-Outputs are saved under `reports/`. Open `reports/drift_month_4.html` in a browser to inspect a drift report. `monthly_metrics.csv` contains the six-month metric trend.
 
 ## 3b. Analyse and validate the monitoring results
 ```bash
@@ -49,8 +50,26 @@ Creates `reports/figures/*.png`, `reports/detection_analysis.csv`, `reports/fair
 In a terminal:
 ```bash
 python app.py
+In macOS/Linux, prefix the start command with the desired values, for example `PROMETHEUS_PORT=9091 GRAFANA_PORT=3001 docker compose up --build -d`.
+
+Open:
+
+- Grafana: http://localhost:3000 (demo login: `admin` / `admin`)
+- Prometheus targets: http://localhost:9090/targets
+- Prometheus active alerts: http://localhost:9090/alerts
+- API health: http://localhost:5001/health
+- API metrics: http://localhost:5001/metrics
+
+Send a prediction request to create live request, latency and approval-probability samples.
+
+**PowerShell**
+```powershell
+Invoke-RestMethod -Uri http://localhost:5001/predict -Method Post `
+  -ContentType "application/json" `
+  -Body '{"age":35,"income":65000,"debt_ratio":0.25,"credit_history":8,"region":"South"}'
 ```
-In another terminal, test it:
+
+**macOS/Linux**
 ```bash
 curl -X POST http://localhost:5001/predict \
   -H "Content-Type: application/json" \
@@ -58,59 +77,87 @@ curl -X POST http://localhost:5001/predict \
 ```
 Metrics: http://localhost:5001/metrics
 
-## 5. Start Prometheus and Grafana
-Docker Compose builds and runs the model API, Prometheus and Grafana:
+Prometheus scrapes the Flask API every five seconds. The dashboard is automatically provisioned in the **Model Monitoring** folder and contains:
+
+1. Prediction requests per second
+2. Prediction latency (p95)
+3. Latest approval probability
+4. Prediction errors
+5. Model accuracy by month
+6. Fairness TPR gap by month
+7. Feature drift share by month
+
+The three model-quality alert rules are evaluated every five seconds and fire after a condition remains true for one minute. They are visible on Prometheus `/alerts`; no notification receiver or Alertmanager is configured in this local demo. API error and latency metrics are visualized but do not have alert rules.
+
+Stop the stack with:
 ```bash
-docker compose up --build -d
+docker compose down
+```
+
+## Reproduce the offline experiment (optional)
+
+Use Python 3.11, create a virtual environment, then install dependencies:
+
+```bash
+python -m venv .venv
 ```
 Open:
 - Grafana: http://localhost:3000 (login: admin / admin)
 - Prometheus: http://localhost:9090
 - Model API: http://localhost:5001/health
 
-Send several test predictions using the curl command above, then refresh Grafana. Prometheus scrapes the API every five seconds.
+Activate it with `.\.venv\Scripts\Activate.ps1` in PowerShell or `source .venv/bin/activate` on macOS/Linux. Then run:
 
-Stop:
 ```bash
-docker compose down
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python src_generate_data.py
+python src_train_model.py
+python monitor.py
 ```
 
-## 6. Alert thresholds used in the demonstration
-- Accuracy below 0.70: critical model-quality alert.
-- Absolute group TPR gap above 0.12: fairness warning requiring investigation.
-- Drift detected in multiple input columns: investigate the data pipeline and compare current distributions with the reference period.
-- API error rate or latency increase: investigate service logs and infrastructure.
+The scripts create the six-month dataset, train on month 1, and write monthly results and Evidently HTML/JSON reports to `reports/`. Run the analysis before rebuilding the Compose stack if you want the API to load newly generated metrics:
 
-The offline script flags the planted drift period from month 4 as a review condition. The actual Evidently HTML report contains the measured feature drift results.
+```bash
+docker compose up --build -d
+```
 
 ## Architecture
-```text
-Six-month synthetic data
-       |
-       +--> Month 1 reference --> Model training --> model.joblib
-       |                                           |
-       +--> Monthly batches -----------------------+
-                    |
-          Offline monitoring (Evidently + sklearn)
-                    |
-          HTML reports + monthly metrics + fairness
 
-Client --> Flask prediction API --> Prometheus --> Grafana
+```text
+data/six_months.csv
+      |                             data/reference.csv
+      |                                      |
+      +--> month 1 --> src_train_model.py    +--> monitor.py
+      |                  |                         |
+      |              model.joblib                 +--> monthly_metrics.csv
+      |                                            +--> drift_month_*.html/json
+      +--> months 1-6 --> monitor.py
+                                                     |
+Client --> Flask API (/predict, /metrics) <----------+
+                     |                         (loads monthly metrics)
+                     v
+                 Prometheus ------------------> Grafana
+                 scrape + rules                 7-panel dashboard
 ```
 
-## Important project interpretation
-This is a reproducible simulation, not a claim that a real company model was monitored. The fairness measure is the difference in group true-positive rates (F vs M); it is a screening metric, not a complete legal fairness assessment. Drift does not automatically prove performance loss, and model performance requires ground-truth labels.
+The Flask process exposes live service metrics and the latest monthly evaluation gauges. Month-labeled gauges retain the six-month history for Grafana; separate latest-month gauges ensure alert rules evaluate only the most recent batch, rather than firing because an old month breached a threshold. The offline simulation is not an online model-quality evaluation.
 
-## Suggested evaluation demo
-1. Show the six-month dataset and explain the planted changes.
-2. Show that the model was trained only on month 1.
-3. Open a later-month Evidently HTML drift report.
-4. Compare monthly accuracy and fairness gap in `reports/monthly_metrics.csv`.
-5. Open Grafana and send live prediction requests.
-6. Explain the alert runbook and calculate detection delay from the first threshold-crossing month.
+## Screenshots and results
+
+The verified dashboard and scrape target are shown below. The checked-in monthly metrics and drift reports are summarized in [PROJECT_REPORT.md](./PROJECT_REPORT.md).
+
+![Provisioned Grafana dashboard showing all seven monitoring panels](./reports/grafana-dashboard.png)
+
+![Prometheus target health showing the Flask API scrape as up](./reports/prometheus-targets.png)
+
+## Interpretation and limitations
+
+This is a synthetic demonstration, not evidence that a real production model was monitored. The fairness value is the absolute difference in group true-positive rates (F vs M), a diagnostic rather than a complete fairness assessment. Drift does not itself prove model degradation, and reliable performance evaluation requires labels. Prometheus evaluates the checked-in latest monthly batch; it does not continuously compute new offline model-quality results.
 
 ## References
-- Evidently documentation: https://docs.evidentlyai.com/
-- Prometheus Python client: https://prometheus.github.io/client_python/
-- Prometheus: https://prometheus.io/docs/
-- Grafana: https://grafana.com/docs/grafana/latest/
+
+- [Evidently documentation](https://docs.evidentlyai.com/)
+- [Prometheus Python client](https://prometheus.github.io/client_python/)
+- [Prometheus documentation](https://prometheus.io/docs/)
+- [Grafana documentation](https://grafana.com/docs/grafana/latest/)

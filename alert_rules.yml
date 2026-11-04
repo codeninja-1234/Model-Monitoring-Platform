@@ -1,0 +1,29 @@
+groups:
+  - name: model-monitoring
+    rules:
+      - alert: ModelAccuracyDegraded
+        expr: model_monitor_latest_month > 1 and model_monitor_latest_accuracy < 0.70
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Model accuracy is below the 0.70 threshold
+          description: "Latest monthly evaluation accuracy is {{ $value }}; verify labels and evaluate rollback."
+
+      - alert: FeatureDriftDetected
+        expr: model_monitor_latest_month > 1 and model_monitor_latest_drift_share > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Evidently detected feature drift
+          description: "Drifted feature share is {{ $value }}; inspect the monthly Evidently report and data pipeline."
+
+      - alert: FairnessViolation
+        expr: model_monitor_latest_month > 1 and model_monitor_latest_fairness_gap > 0.12
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Group true-positive-rate gap exceeds 0.12
+          description: "Latest monthly fairness gap is {{ $value }}; inspect group metrics and sample sizes."
