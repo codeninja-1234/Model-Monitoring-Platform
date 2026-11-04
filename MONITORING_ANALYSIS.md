@@ -45,6 +45,13 @@ Figures: `reports/figures/performance_trend.png`, `fairness.png`, `drift_heatmap
 
 ### What the numbers say
 
+* **Accuracy:** Accuracy rises in months 2–4 (0.703–0.729), even though concept drift starts in month 4. It first falls below 0.70 in month 5 (0.692). The 95% confidence interval includes 0.70, while month 6 accuracy is 0.665, with a Wilson confidence interval upper bound below 0.70.
+
+* **Precision:** Precision decreases from 0.750 in month 4 to 0.666 in month 5 and 0.615 in month 6, while recall remains around 0.80. This indicates that the model increasingly approves applications that are not actually approved in the labels.
+
+* **Fairness:** The actual approval rate for women falls from 0.581 in month 4 to 0.469 in month 5 and 0.397 in month 6, while the rate for men remains around 0.56. Gender is not used as a model input. In month 6, the TPR is 0.881 for women and 0.746 for men, giving a gap of 0.1345. The FPR is also higher for women (0.501) than men (0.405). These results should be interpreted alongside the outcome-rate gap.
+
+* **Sample-size caution:** The month-6 TPR-gap 95% bootstrap confidence interval is 0.0739–0.1935, which overlaps the 0.12 threshold. The month-1 baseline gap is 0.0558, with a confidence interval of 0.0042–0.1837. Treat the fairness alert as an investigation signal rather than conclusive proof of bias.
 
 ## 4. Time to detection
 
