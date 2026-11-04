@@ -161,3 +161,21 @@ This is a synthetic demonstration, not evidence that a real production model was
 - [Prometheus Python client](https://prometheus.github.io/client_python/)
 - [Prometheus documentation](https://prometheus.io/docs/)
 - [Grafana documentation](https://grafana.com/docs/grafana/latest/)
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    A["Synthetic Data Generator"] --> B["Six-Month Dataset"]
+    B --> C["Model Training<br/>Logistic Regression"]
+    C --> D["model.joblib"]
+    B --> E["Offline Monitoring<br/>monitor.py"]
+    D --> E
+    E --> F["Monthly Metrics and<br/>Evidently Reports"]
+    D --> G["Flask Prediction API"]
+    F --> G
+    G --> H["Prometheus"]
+    H --> I["Alert Rules"]
+    H --> J["Grafana Dashboard"]
+
+```
