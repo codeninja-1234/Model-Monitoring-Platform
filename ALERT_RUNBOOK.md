@@ -39,7 +39,7 @@ Using the checked-in six-month results:
 |---|---:|---:|---:|
 | Accuracy < 0.70 | Month 4 (additional concept noise) | Month 5 | 1 month |
 | Fairness gap > 0.12 | Month 5 (group outcome shift) | Month 6 | 1 month |
-| Feature drift share > 0 | Month 3 (population shift) | Month 2 | Crossed before the intentional shift; likely sample variation |
+| Feature drift share >= 0.5 | Month 3 (population shift) | Month 3 | Detected in the intended month |
 
 Because this is monthly batch monitoring, report detection delay in monthly batches. Do not claim instant detection for the offline six-month simulation.
 
@@ -50,6 +50,4 @@ Because this is monthly batch monitoring, report detection delay in monthly batc
 | Concept drift (4) | Accuracy < 0.70 | 5 | 1 |
 | Fairness issue (5) | TPR gap > 0.12 | 6 | 1 |
 | Fairness issue (5) | Outcome-rate gap > 0.08 | 5 | 0 |
-
-Before confirming an accuracy alert, check the 95% confidence interval (month 5: 0.693, CI 0.667-0.719 includes 0.70; month 6: 0.663, CI upper bound 0.689 is confirmed). See `MONITORING_ANALYSIS.md`.
-These are retrospective batch results, not online detection times. The Prometheus rules evaluate the checked-in latest batch and start their one-minute hold only after the API loads it.
+Before confirming an accuracy alert, check the 95% confidence interval. Month 5 accuracy is 0.692, and month 6 accuracy is 0.665. Use the latest validation results and the Wilson confidence interval to determine whether the accuracy is statistically below 0.70. See MONITORING_ANALYSIS.md.

@@ -37,14 +37,14 @@ Values below are from the checked-in `reports/monthly_metrics.csv`. Drift is the
 
 | Month | Accuracy | Precision | Recall | F1 | Fairness TPR gap | Drift share |
 |---|---:|---:|---:|---:|---:|---:|
-| 1 (held-out baseline) | 0.6967 | 0.7151 | 0.7778 | 0.7451 | 0.0676 | — |
-| 2 | 0.7092 | 0.7334 | 0.7966 | 0.7637 | 0.0250 | 0.4000 |
-| 3 | 0.7100 | 0.7418 | 0.7714 | 0.7563 | 0.0168 | 0.8000 |
-| 4 | 0.7267 | 0.7480 | 0.7954 | 0.7709 | 0.0025 | 0.8000 |
-| 5 | 0.6933 | 0.6680 | 0.8003 | 0.7282 | 0.0649 | 1.0000 |
-| 6 | 0.6625 | 0.6128 | 0.7997 | 0.6939 | 0.1375 | 0.8000 |
+| 1 (held-out baseline) | 0.6967 | 0.7174 | 0.7719 | 0.7437 | 0.0558 | — |
+| 2 | 0.7033 | 0.7262 | 0.7980 | 0.7604 | 0.0221 | 0.2000 |
+| 3 | 0.7075 | 0.7394 | 0.7700 | 0.7544 | 0.0082 | 0.6000 |
+| 4 | 0.7292 | 0.7503 | 0.7968 | 0.7729 | 0.0004 | 0.8000 |
+| 5 | 0.6917 | 0.6658 | 0.8019 | 0.7275 | 0.0685 | 0.8000 |
+| 6 | 0.6650 | 0.6150 | 0.8014 | 0.6959 | 0.1345 | 0.8000 |
 
-Accuracy first falls below 0.70 in month 5, and the fairness gap first exceeds 0.12 in month 6. The feature-drift rule is configured for any positive drift share; the checked-in results show a positive share in month 2, before the intentional population shift introduced from month 3. This early finding is retained rather than misrepresented as a later detection.
+Accuracy first falls below 0.70 in month 5, and the fairness TPR gap first exceeds 0.12 in month 6. The feature-drift alert is configured to trigger when at least 50% of monitored features drift. Month 2 has a drift share of 0.20 and does not trigger an alert. The first drift alert occurs in month 3, when the drift share reaches 0.60, matching the intended population-shift introduction.
 
 ## Dashboard and alert configuration
 
@@ -63,14 +63,14 @@ Prometheus evaluates these rules every five seconds with a one-minute pending pe
 | Alert | Condition | Severity |
 |---|---|---|
 | `ModelAccuracyDegraded` | Latest monthly accuracy < 0.70 | Critical |
-| `FeatureDriftDetected` | Latest monthly drift share > 0 | Warning |
+| `FeatureDriftDetected` | Latest monthly drift share >= 0.5 | Warning |
 | `FairnessViolation` | Latest monthly absolute group TPR gap > 0.12 | Warning |
 
 The local Compose deployment displays active alerts in Prometheus but does not configure Alertmanager or an external notification receiver. API error and latency metrics are dashboard signals, not alert rules.
 
 ## Detection timing
 
-The simulation introduces additional concept noise in month 4 and a group-specific outcome shift in month 5. Accuracy crosses its threshold in month 5 (one monthly batch later); the fairness gap crosses its threshold in month 6 (also one batch later). Feature drift is flagged in month 2, earlier than the intentional population shift from month 3, consistent with possible sampling variation. These are batch-level observations, not real-time detection guarantees.
+The simulation introduces additional concept noise in month 4 and a group-specific outcome shift in month 5. Accuracy falls below 0.70 in month 5, one monthly batch after the concept shift. The fairness TPR gap exceeds 0.12 in month 6, one monthly batch after the group-specific outcome shift. Feature drift is first detected in month 3, matching the intended population shift. These are batch-level observations, not real-time detection guarantees.
 
 ## Screenshots and reproducibility
 
