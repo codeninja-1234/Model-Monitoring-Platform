@@ -2,6 +2,7 @@
   {
     "month": 1,
     "evaluation_type": "held_out_baseline",
+    "n_rows": 300,
     "accuracy": 0.6967,
     "precision": 0.7151,
     "recall": 0.7778,
@@ -13,11 +14,21 @@
     "fairness_gap": 0.0676,
     "evidently_drift_share": null,
     "drift_detected": null,
-    "alerts": []
+    "alerts": [],
+    "roc_auc": 0.7239,
+    "fpr_gap": 0.0944,
+    "selection_rate_gap": 0.0262,
+    "outcome_rate_gap": 0.0677,
+    "n_female": 142,
+    "n_male": 158,
+    "n_positive_female": 86,
+    "n_positive_male": 85,
+    "drifted_features": ""
   },
   {
     "month": 2,
     "evaluation_type": "monthly_production",
+    "n_rows": 1200,
     "accuracy": 0.7092,
     "precision": 0.7334,
     "recall": 0.7966,
@@ -27,15 +38,23 @@
       "M": 0.7838616714697406
     },
     "fairness_gap": 0.025,
-    "evidently_drift_share": 0.4,
-    "drift_detected": true,
-    "alerts": [
-      "WARNING: Evidently detected feature drift"
-    ]
+    "evidently_drift_share": 0.2,
+    "drift_detected": false,
+    "alerts": [],
+    "roc_auc": 0.7663,
+    "fpr_gap": 0.0047,
+    "selection_rate_gap": 0.0217,
+    "outcome_rate_gap": 0.0233,
+    "n_female": 600,
+    "n_male": 600,
+    "n_positive_female": 361,
+    "n_positive_male": 347,
+    "drifted_features": "credit_history"
   },
   {
     "month": 3,
     "evaluation_type": "monthly_production",
+    "n_rows": 1200,
     "accuracy": 0.71,
     "precision": 0.7418,
     "recall": 0.7714,
@@ -45,15 +64,25 @@
       "M": 0.7632311977715878
     },
     "fairness_gap": 0.0168,
-    "evidently_drift_share": 0.8,
+    "evidently_drift_share": 0.6,
     "drift_detected": true,
     "alerts": [
-      "WARNING: Evidently detected feature drift"
-    ]
+      "WARNING: Evidently dataset drift (>=50% of features)"
+    ],
+    "roc_auc": 0.7666,
+    "fpr_gap": 0.002,
+    "selection_rate_gap": 0.0056,
+    "outcome_rate_gap": 0.0086,
+    "n_female": 589,
+    "n_male": 611,
+    "n_positive_female": 341,
+    "n_positive_male": 359,
+    "drifted_features": "income,debt_ratio,credit_history"
   },
   {
     "month": 4,
     "evaluation_type": "monthly_production",
+    "n_rows": 1200,
     "accuracy": 0.7267,
     "precision": 0.748,
     "recall": 0.7954,
@@ -66,12 +95,22 @@
     "evidently_drift_share": 0.8,
     "drift_detected": true,
     "alerts": [
-      "WARNING: Evidently detected feature drift"
-    ]
+      "WARNING: Evidently dataset drift (>=50% of features)"
+    ],
+    "roc_auc": 0.7917,
+    "fpr_gap": 0.0391,
+    "selection_rate_gap": 0.0174,
+    "outcome_rate_gap": 0.0056,
+    "n_female": 585,
+    "n_male": 615,
+    "n_positive_female": 340,
+    "n_positive_male": 354,
+    "drifted_features": "age,income,debt_ratio,credit_history"
   },
   {
     "month": 5,
     "evaluation_type": "monthly_production",
+    "n_rows": 1200,
     "accuracy": 0.6933,
     "precision": 0.668,
     "recall": 0.8003,
@@ -81,16 +120,27 @@
       "M": 0.7708333333333334
     },
     "fairness_gap": 0.0649,
-    "evidently_drift_share": 1.0,
+    "evidently_drift_share": 0.8,
     "drift_detected": true,
     "alerts": [
       "CRITICAL: accuracy below 0.70",
-      "WARNING: Evidently detected feature drift"
-    ]
+      "WARNING: outcome-rate gap F vs M above 0.08",
+      "WARNING: Evidently dataset drift (>=50% of features)"
+    ],
+    "roc_auc": 0.7732,
+    "fpr_gap": 0.0484,
+    "selection_rate_gap": 0.0228,
+    "outcome_rate_gap": 0.0882,
+    "n_female": 597,
+    "n_male": 603,
+    "n_positive_female": 280,
+    "n_positive_male": 336,
+    "drifted_features": "age,income,debt_ratio,credit_history"
   },
   {
     "month": 6,
     "evaluation_type": "monthly_production",
+    "n_rows": 1200,
     "accuracy": 0.6625,
     "precision": 0.6128,
     "recall": 0.7997,
@@ -105,7 +155,17 @@
     "alerts": [
       "CRITICAL: accuracy below 0.70",
       "WARNING: fairness TPR gap above 0.12",
-      "WARNING: Evidently detected feature drift"
-    ]
+      "WARNING: outcome-rate gap F vs M above 0.08",
+      "WARNING: Evidently dataset drift (>=50% of features)"
+    ],
+    "roc_auc": 0.7406,
+    "fpr_gap": 0.1018,
+    "selection_rate_gap": 0.0617,
+    "outcome_rate_gap": 0.1606,
+    "n_female": 592,
+    "n_male": 608,
+    "n_positive_female": 235,
+    "n_positive_male": 339,
+    "drifted_features": "age,income,debt_ratio,credit_history"
   }
 ]

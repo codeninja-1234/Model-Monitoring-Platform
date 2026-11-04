@@ -38,6 +38,18 @@ $env:GRAFANA_PORT = "3001"
 docker compose up --build -d
 ```
 
+## 3b. Analyse and validate the monitoring results
+```bash
+python analyze_results.py     # validation, fairness table, detection delays, charts
+python -m pytest -q           # unit and sanity tests
+```
+Creates `reports/figures/*.png`, `reports/detection_analysis.csv`, `reports/fairness_detail.csv`,
+`reports/validation_checks.csv`, `reports/monitoring_summary.json`. Findings are written up in `MONITORING_ANALYSIS.md`.
+
+## 4. Run the prediction API locally
+In a terminal:
+```bash
+python app.py
 In macOS/Linux, prefix the start command with the desired values, for example `PROMETHEUS_PORT=9091 GRAFANA_PORT=3001 docker compose up --build -d`.
 
 Open:
@@ -63,6 +75,7 @@ curl -X POST http://localhost:5001/predict \
   -H "Content-Type: application/json" \
   -d '{"age":35,"income":65000,"debt_ratio":0.25,"credit_history":8,"region":"South"}'
 ```
+Metrics: http://localhost:5001/metrics
 
 Prometheus scrapes the Flask API every five seconds. The dashboard is automatically provisioned in the **Model Monitoring** folder and contains:
 
@@ -88,6 +101,10 @@ Use Python 3.11, create a virtual environment, then install dependencies:
 ```bash
 python -m venv .venv
 ```
+Open:
+- Grafana: http://localhost:3000 (login: admin / admin)
+- Prometheus: http://localhost:9090
+- Model API: http://localhost:5001/health
 
 Activate it with `.\.venv\Scripts\Activate.ps1` in PowerShell or `source .venv/bin/activate` on macOS/Linux. Then run:
 

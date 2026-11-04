@@ -1,0 +1,273 @@
+{
+  "planted_issues": {
+    "feature_drift": 3,
+    "concept_drift": 4,
+    "fairness_issue": 5
+  },
+  "thresholds": {
+    "accuracy": 0.7,
+    "tpr_gap": 0.12,
+    "outcome_gap": 0.08,
+    "drift_share": 0.5
+  },
+  "validation": {
+    "passed": 46,
+    "total": 46
+  },
+  "detection": [
+    {
+      "signal": "Original rule: ANY feature drifted, Evidently default tests",
+      "issue": "feature_drift",
+      "planted_month": 3,
+      "rule": "drift_share > 0 (defaults)",
+      "first_alert_month": 3,
+      "delay_batches": 0,
+      "approx_days_to_alert": 30,
+      "false_positive_months": "2",
+      "alert_months": "2,3,4,5,6"
+    },
+    {
+      "signal": "Final: dataset drift (>=50% features, JS for region)",
+      "issue": "feature_drift",
+      "planted_month": 3,
+      "rule": "drift_share >= 0.5",
+      "first_alert_month": 3,
+      "delay_batches": 0,
+      "approx_days_to_alert": 30,
+      "false_positive_months": "none",
+      "alert_months": "3,4,5,6"
+    },
+    {
+      "signal": "Accuracy < 0.70",
+      "issue": "concept_drift",
+      "planted_month": 4,
+      "rule": "accuracy < 0.70",
+      "first_alert_month": 5,
+      "delay_batches": 1,
+      "approx_days_to_alert": 60,
+      "false_positive_months": "none",
+      "alert_months": "5,6"
+    },
+    {
+      "signal": "Accuracy < 0.70, statistically confirmed (95% CI upper bound < 0.70)",
+      "issue": "concept_drift",
+      "planted_month": 4,
+      "rule": "Wilson upper < 0.70",
+      "first_alert_month": 6,
+      "delay_batches": 2,
+      "approx_days_to_alert": 90,
+      "false_positive_months": "none",
+      "alert_months": "6"
+    },
+    {
+      "signal": "TPR gap (F vs M) > 0.12",
+      "issue": "fairness_issue",
+      "planted_month": 5,
+      "rule": "tpr_gap > 0.12",
+      "first_alert_month": 6,
+      "delay_batches": 1,
+      "approx_days_to_alert": 60,
+      "false_positive_months": "none",
+      "alert_months": "6"
+    },
+    {
+      "signal": "Outcome-rate gap (F vs M) > 0.08  [threshold set after seeing data]",
+      "issue": "fairness_issue",
+      "planted_month": 5,
+      "rule": "outcome_gap > 0.08",
+      "first_alert_month": 5,
+      "delay_batches": 0,
+      "approx_days_to_alert": 30,
+      "false_positive_months": "none",
+      "alert_months": "5,6"
+    }
+  ],
+  "drift_confusion": [
+    {
+      "configuration": "Evidently defaults (chi-square for region)",
+      "true_pos": 15,
+      "false_pos": 4,
+      "false_neg": 1,
+      "true_neg": 5,
+      "precision": 0.789,
+      "recall": 0.938
+    },
+    {
+      "configuration": "Final (Jensen-Shannon for region)",
+      "true_pos": 15,
+      "false_pos": 1,
+      "false_neg": 1,
+      "true_neg": 8,
+      "precision": 0.938,
+      "recall": 0.938
+    }
+  ],
+  "evidently_default_false_positive_cells": [
+    {
+      "month": 2,
+      "feature": "credit_history",
+      "score": 0.02936
+    },
+    {
+      "month": 2,
+      "feature": "region",
+      "score": 0.00026
+    },
+    {
+      "month": 3,
+      "feature": "region",
+      "score": 0.00291
+    },
+    {
+      "month": 5,
+      "feature": "region",
+      "score": 0.00345
+    }
+  ],
+  "monthly": [
+    {
+      "month": 1,
+      "evaluation_type": "held_out_baseline",
+      "n_rows": 300,
+      "accuracy": 0.6967,
+      "precision": 0.7151,
+      "recall": 0.7778,
+      "f1": 0.7451,
+      "fairness_tpr": "{'F': 0.7441860465116279, 'M': 0.8117647058823529}",
+      "fairness_gap": 0.0676,
+      "evidently_drift_share": NaN,
+      "drift_detected": NaN,
+      "roc_auc": 0.7239,
+      "fpr_gap": 0.0944,
+      "selection_rate_gap": 0.0262,
+      "outcome_rate_gap": 0.0677,
+      "n_female": 142,
+      "n_male": 158,
+      "n_positive_female": 86,
+      "n_positive_male": 85,
+      "drifted_features": NaN,
+      "acc_ci_low": 0.6424,
+      "acc_ci_high": 0.7459
+    },
+    {
+      "month": 2,
+      "evaluation_type": "monthly_production",
+      "n_rows": 1200,
+      "accuracy": 0.7092,
+      "precision": 0.7334,
+      "recall": 0.7966,
+      "f1": 0.7637,
+      "fairness_tpr": "{'F': 0.8088642659279779, 'M': 0.7838616714697406}",
+      "fairness_gap": 0.025,
+      "evidently_drift_share": 0.2,
+      "drift_detected": false,
+      "roc_auc": 0.7663,
+      "fpr_gap": 0.0047,
+      "selection_rate_gap": 0.0217,
+      "outcome_rate_gap": 0.0233,
+      "n_female": 600,
+      "n_male": 600,
+      "n_positive_female": 361,
+      "n_positive_male": 347,
+      "drifted_features": "credit_history",
+      "acc_ci_low": 0.6828,
+      "acc_ci_high": 0.7342
+    },
+    {
+      "month": 3,
+      "evaluation_type": "monthly_production",
+      "n_rows": 1200,
+      "accuracy": 0.71,
+      "precision": 0.7418,
+      "recall": 0.7714,
+      "f1": 0.7563,
+      "fairness_tpr": "{'F': 0.7800586510263929, 'M': 0.7632311977715878}",
+      "fairness_gap": 0.0168,
+      "evidently_drift_share": 0.6,
+      "drift_detected": true,
+      "roc_auc": 0.7666,
+      "fpr_gap": 0.002,
+      "selection_rate_gap": 0.0056,
+      "outcome_rate_gap": 0.0086,
+      "n_female": 589,
+      "n_male": 611,
+      "n_positive_female": 341,
+      "n_positive_male": 359,
+      "drifted_features": "income,debt_ratio,credit_history",
+      "acc_ci_low": 0.6837,
+      "acc_ci_high": 0.735
+    },
+    {
+      "month": 4,
+      "evaluation_type": "monthly_production",
+      "n_rows": 1200,
+      "accuracy": 0.7267,
+      "precision": 0.748,
+      "recall": 0.7954,
+      "f1": 0.7709,
+      "fairness_tpr": "{'F': 0.7941176470588235, 'M': 0.7966101694915254}",
+      "fairness_gap": 0.0025,
+      "evidently_drift_share": 0.8,
+      "drift_detected": true,
+      "roc_auc": 0.7917,
+      "fpr_gap": 0.0391,
+      "selection_rate_gap": 0.0174,
+      "outcome_rate_gap": 0.0056,
+      "n_female": 585,
+      "n_male": 615,
+      "n_positive_female": 340,
+      "n_positive_male": 354,
+      "drifted_features": "age,income,debt_ratio,credit_history",
+      "acc_ci_low": 0.7008,
+      "acc_ci_high": 0.7511
+    },
+    {
+      "month": 5,
+      "evaluation_type": "monthly_production",
+      "n_rows": 1200,
+      "accuracy": 0.6933,
+      "precision": 0.668,
+      "recall": 0.8003,
+      "f1": 0.7282,
+      "fairness_tpr": "{'F': 0.8357142857142857, 'M': 0.7708333333333334}",
+      "fairness_gap": 0.0649,
+      "evidently_drift_share": 0.8,
+      "drift_detected": true,
+      "roc_auc": 0.7732,
+      "fpr_gap": 0.0484,
+      "selection_rate_gap": 0.0228,
+      "outcome_rate_gap": 0.0882,
+      "n_female": 597,
+      "n_male": 603,
+      "n_positive_female": 280,
+      "n_positive_male": 336,
+      "drifted_features": "age,income,debt_ratio,credit_history",
+      "acc_ci_low": 0.6667,
+      "acc_ci_high": 0.7188
+    },
+    {
+      "month": 6,
+      "evaluation_type": "monthly_production",
+      "n_rows": 1200,
+      "accuracy": 0.6625,
+      "precision": 0.6128,
+      "recall": 0.7997,
+      "f1": 0.6939,
+      "fairness_tpr": "{'F': 0.8808510638297873, 'M': 0.7433628318584071}",
+      "fairness_gap": 0.1375,
+      "evidently_drift_share": 0.8,
+      "drift_detected": true,
+      "roc_auc": 0.7406,
+      "fpr_gap": 0.1018,
+      "selection_rate_gap": 0.0617,
+      "outcome_rate_gap": 0.1606,
+      "n_female": 592,
+      "n_male": 608,
+      "n_positive_female": 235,
+      "n_positive_male": 339,
+      "drifted_features": "age,income,debt_ratio,credit_history",
+      "acc_ci_low": 0.6353,
+      "acc_ci_high": 0.6887
+    }
+  ]
+}
