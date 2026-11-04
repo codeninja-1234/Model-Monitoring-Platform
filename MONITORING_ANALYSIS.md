@@ -33,22 +33,18 @@ Remaining false negative: `age` in month 3 (planted shift is only +1 year, SD = 
 
 ## 3. Monthly results (final configuration)
 
-| Month | Accuracy (95 % CI) | Precision | Recall | F1 | ROC-AUC | TPR F | TPR M | TPR gap | Drift share | Alerts |
-|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| 1 (baseline) | 0.697 (0.642–0.746) | 0.715 | 0.778 | 0.745 | 0.724 | 0.744 | 0.812 | 0.068 | – | – |
-| 2 | 0.709 (0.683–0.734) | 0.733 | 0.797 | 0.764 | 0.766 | 0.809 | 0.784 | 0.025 | 0.2 | – |
-| 3 | 0.710 (0.684–0.735) | 0.742 | 0.771 | 0.756 | 0.767 | 0.780 | 0.763 | 0.017 | 0.6 | Drift |
-| 4 | 0.727 (0.701–0.751) | 0.748 | 0.795 | 0.771 | 0.792 | 0.794 | 0.797 | 0.003 | 0.8 | Drift |
-| 5 | 0.693 (0.667–0.719) | 0.668 | 0.800 | 0.728 | 0.773 | 0.836 | 0.771 | 0.065 | 0.8 | Accuracy, outcome-gap, drift |
-| 6 | 0.663 (0.635–0.689) | 0.613 | 0.800 | 0.694 | 0.741 | 0.881 | 0.743 | **0.137** | 0.8 | Accuracy, TPR gap, outcome-gap, drift |
-
+| Month | Accuracy | Precision | Recall | F1 | ROC-AUC | TPR F | TPR M | TPR gap | Drift share | Alerts |
+|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| 1 (held-out baseline) | 0.6967 | 0.7174 | 0.7719 | 0.7437 | 0.7206 | 0.7442 | 0.8000 | 0.0558 | — | — |
+| 2 | 0.7033 | 0.7262 | 0.7980 | 0.7604 | 0.7646 | 0.8089 | 0.7867 | 0.0221 | 0.2000 | — |
+| 3 | 0.7075 | 0.7394 | 0.7700 | 0.7544 | — | 0.7742 | 0.7660 | 0.0082 | 0.6000 | Drift |
+| 4 | 0.7292 | 0.7503 | 0.7968 | 0.7729 | — | 0.7971 | 0.7966 | 0.0004 | 0.8000 | Drift |
+| 5 | 0.6917 | 0.6658 | 0.8019 | 0.7275 | — | 0.8393 | 0.7708 | 0.0685 | 0.8000 | Accuracy, outcome-gap, drift |
+| 6 | 0.6650 | 0.6150 | 0.8014 | 0.6959 | — | 0.8809 | 0.7463 | 0.1345 | 0.8000 | Accuracy, TPR gap, outcome-gap, drift |
 Figures: `reports/figures/performance_trend.png`, `fairness.png`, `drift_heatmap.png`, `detection_timeline.png`.
 
 ### What the numbers say
-* **Accuracy alone is a weak, late signal.** It *rises* in months 2–4 (0.709–0.727) because the shifted population is easier to classify, even though concept drift starts in month 4. It first crosses 0.70 in month 5, but 0.693 is inside the 95 % CI (0.667–0.719) – statistically only month 6 (0.663, CI upper bound 0.689) is confirmed.
-* **Precision is the metric that degrades**: 0.748 (m4) → 0.668 (m5) → 0.613 (m6) while recall stays ≈ 0.80. The label rate changes (actual approvals fall) but the model keeps approving at the same rate, i.e. it over-approves.
-* **Fairness:** actual approval rate for women falls 0.58 → 0.47 → 0.40 while men stay ≈ 0.56. The model never sees gender, so its TPR for women actually **rises** (0.79 → 0.88) and the gap is **in favour of women**: the model over-approves women relative to their true outcomes (FPR 0.51 vs 0.41 in month 6). The TPR gap is therefore a real but indirect symptom; a bias in the *labels* shows up first in the outcome-rate gap.
-* **Sample-size caution (runbook step 5):** the TPR-gap 95 % bootstrap CI in month 6 is 0.078–0.196, i.e. it overlaps the 0.12 threshold; the month-1 baseline gap (0.068) has CI 0.004–0.192 with only 85–86 positives per group. Treat the fairness alert as "investigate", which matches its P2 severity.
+
 
 ## 4. Time to detection
 
@@ -57,7 +53,8 @@ Monitoring is monthly batch monitoring: an issue planted in month *k* can first 
 | Planted issue (start) | Signal / rule | First alert | Delay | ≈ Days | False positives |
 |---|---|---:|---:|---:|---|
 | Feature drift (month 3) | Original: any feature drifted, Evidently defaults | 3 | 0 | 30 | **month 2** |
-| Feature drift (month 3) | **Final:** ≥ 50 % features drifted | **3** | **0** | 30 | none |
+| Feature drift (month 3) | Final: >=50% features drifted, JS for region | 3 | 0 | 30 | none |
+
 | Concept drift (month 4) | Accuracy < 0.70 | 5 | 1 | 60 | none |
 | Concept drift (month 4) | Accuracy < 0.70, statistically confirmed | 6 | 2 | 90 | none |
 | Fairness issue (month 5) | TPR gap > 0.12 | 6 | 1 | 60 | none |
@@ -70,7 +67,7 @@ Monitoring is monthly batch monitoring: an issue planted in month *k* can first 
 
 ## 5. Threshold observations (for the runbook)
 * The accuracy threshold 0.70 sits almost exactly on the baseline accuracy (0.697). Keep it as the P1 rule but confirm with the 95 % CI before escalating; consider a relative rule ("drop > 5 points below the best of the last 3 months") for a real deployment.
-* Model was trained on all of month 1, so the 300-row "held-out" baseline is actually part of the training data (small effect for a 6-parameter logistic regression). For a stricter protocol, train on the other 75 % of month 1 using the same split.
+* The training/evaluation leakage identified in the initial implementation was corrected. The model is now trained on 900 records (75% of month 1), while the remaining 300 records (25%) are held out for baseline evaluation. Both training and monitoring use the same stratified split with random_state=42.
 
 ## 6. Reproduce
 ```bash

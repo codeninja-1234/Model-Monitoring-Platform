@@ -1,44 +1,44 @@
 check,passed,detail
 month 1 accuracy matches manual calculation,True,manual=0.6967 saved=0.6967
-month 1 precision matches manual calculation,True,manual=0.7151 saved=0.7151
-month 1 recall matches manual calculation,True,manual=0.7778 saved=0.7778
-month 1 f1 matches manual calculation,True,manual=0.7451 saved=0.7451
-month 1 TPR gap matches manual calculation,True,F=0.7442 M=0.8118 saved gap=0.0676
+month 1 precision matches manual calculation,True,manual=0.7174 saved=0.7174
+month 1 recall matches manual calculation,True,manual=0.7719 saved=0.7719
+month 1 f1 matches manual calculation,True,manual=0.7437 saved=0.7437
+month 1 TPR gap matches manual calculation,True,F=0.7442 M=0.8000 saved gap=0.0558
 month 1 group sizes add up to batch size,True,142+158=300
 "month 1 metrics within [0,1]",True,
-month 2 accuracy matches manual calculation,True,manual=0.7092 saved=0.7092
-month 2 precision matches manual calculation,True,manual=0.7334 saved=0.7334
-month 2 recall matches manual calculation,True,manual=0.7966 saved=0.7966
-month 2 f1 matches manual calculation,True,manual=0.7637 saved=0.7637
-month 2 TPR gap matches manual calculation,True,F=0.8089 M=0.7839 saved gap=0.0250
+month 2 accuracy matches manual calculation,True,manual=0.7033 saved=0.7033
+month 2 precision matches manual calculation,True,manual=0.7262 saved=0.7262
+month 2 recall matches manual calculation,True,manual=0.7980 saved=0.7980
+month 2 f1 matches manual calculation,True,manual=0.7604 saved=0.7604
+month 2 TPR gap matches manual calculation,True,F=0.8089 M=0.7867 saved gap=0.0221
 month 2 group sizes add up to batch size,True,600+600=1200
 "month 2 metrics within [0,1]",True,
-month 3 accuracy matches manual calculation,True,manual=0.7100 saved=0.7100
-month 3 precision matches manual calculation,True,manual=0.7418 saved=0.7418
-month 3 recall matches manual calculation,True,manual=0.7714 saved=0.7714
-month 3 f1 matches manual calculation,True,manual=0.7563 saved=0.7563
-month 3 TPR gap matches manual calculation,True,F=0.7801 M=0.7632 saved gap=0.0168
+month 3 accuracy matches manual calculation,True,manual=0.7075 saved=0.7075
+month 3 precision matches manual calculation,True,manual=0.7394 saved=0.7394
+month 3 recall matches manual calculation,True,manual=0.7700 saved=0.7700
+month 3 f1 matches manual calculation,True,manual=0.7544 saved=0.7544
+month 3 TPR gap matches manual calculation,True,F=0.7742 M=0.7660 saved gap=0.0082
 month 3 group sizes add up to batch size,True,589+611=1200
 "month 3 metrics within [0,1]",True,
-month 4 accuracy matches manual calculation,True,manual=0.7267 saved=0.7267
-month 4 precision matches manual calculation,True,manual=0.7480 saved=0.7480
-month 4 recall matches manual calculation,True,manual=0.7954 saved=0.7954
-month 4 f1 matches manual calculation,True,manual=0.7709 saved=0.7709
-month 4 TPR gap matches manual calculation,True,F=0.7941 M=0.7966 saved gap=0.0025
+month 4 accuracy matches manual calculation,True,manual=0.7292 saved=0.7292
+month 4 precision matches manual calculation,True,manual=0.7503 saved=0.7503
+month 4 recall matches manual calculation,True,manual=0.7968 saved=0.7968
+month 4 f1 matches manual calculation,True,manual=0.7729 saved=0.7729
+month 4 TPR gap matches manual calculation,True,F=0.7971 M=0.7966 saved gap=0.0004
 month 4 group sizes add up to batch size,True,585+615=1200
 "month 4 metrics within [0,1]",True,
-month 5 accuracy matches manual calculation,True,manual=0.6933 saved=0.6933
-month 5 precision matches manual calculation,True,manual=0.6680 saved=0.6680
-month 5 recall matches manual calculation,True,manual=0.8003 saved=0.8003
-month 5 f1 matches manual calculation,True,manual=0.7282 saved=0.7282
-month 5 TPR gap matches manual calculation,True,F=0.8357 M=0.7708 saved gap=0.0649
+month 5 accuracy matches manual calculation,True,manual=0.6917 saved=0.6917
+month 5 precision matches manual calculation,True,manual=0.6658 saved=0.6658
+month 5 recall matches manual calculation,True,manual=0.8019 saved=0.8019
+month 5 f1 matches manual calculation,True,manual=0.7275 saved=0.7275
+month 5 TPR gap matches manual calculation,True,F=0.8393 M=0.7708 saved gap=0.0685
 month 5 group sizes add up to batch size,True,597+603=1200
 "month 5 metrics within [0,1]",True,
-month 6 accuracy matches manual calculation,True,manual=0.6625 saved=0.6625
-month 6 precision matches manual calculation,True,manual=0.6128 saved=0.6128
-month 6 recall matches manual calculation,True,manual=0.7997 saved=0.7997
-month 6 f1 matches manual calculation,True,manual=0.6939 saved=0.6939
-month 6 TPR gap matches manual calculation,True,F=0.8809 M=0.7434 saved gap=0.1375
+month 6 accuracy matches manual calculation,True,manual=0.6650 saved=0.6650
+month 6 precision matches manual calculation,True,manual=0.6150 saved=0.6150
+month 6 recall matches manual calculation,True,manual=0.8014 saved=0.8014
+month 6 f1 matches manual calculation,True,manual=0.6959 saved=0.6959
+month 6 TPR gap matches manual calculation,True,F=0.8809 M=0.7463 saved gap=0.1345
 month 6 group sizes add up to batch size,True,592+608=1200
 "month 6 metrics within [0,1]",True,
 month 1 is flagged as baseline (no production alerts),True,
