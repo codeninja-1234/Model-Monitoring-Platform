@@ -1,0 +1,26 @@
+month,feature,method,threshold,score,drifted
+2,age,K-S p_value,0.05,0.4528438593359912,False
+2,income,K-S p_value,0.05,0.6841702158982618,False
+2,debt_ratio,K-S p_value,0.05,0.26959554730894036,False
+2,credit_history,K-S p_value,0.05,0.02935752467084037,True
+2,region,jensenshannon,0.1,0.04449374272639188,False
+3,age,K-S p_value,0.05,0.26959554730894036,False
+3,income,K-S p_value,0.05,0.0007639501433250985,True
+3,debt_ratio,K-S p_value,0.05,0.025225690935852148,True
+3,credit_history,K-S p_value,0.05,3.275169060581772e-06,True
+3,region,jensenshannon,0.1,0.03807831420576607,False
+4,age,K-S p_value,0.05,0.0024999248072347506,True
+4,income,K-S p_value,0.05,1.4163570145185125e-09,True
+4,debt_ratio,K-S p_value,0.05,1.4456880592503355e-07,True
+4,credit_history,K-S p_value,0.05,1.2110441569760701e-08,True
+4,region,jensenshannon,0.1,0.017220110649920337,False
+5,age,K-S p_value,0.05,7.58390879579595e-05,True
+5,income,K-S p_value,0.05,6.600839566707511e-19,True
+5,debt_ratio,K-S p_value,0.05,3.510649152415705e-14,True
+5,credit_history,K-S p_value,0.05,2.370058272044371e-17,True
+5,region,jensenshannon,0.1,0.037808441885488445,False
+6,age,K-S p_value,0.05,1.6672440824928534e-08,True
+6,income,K-S p_value,0.05,8.870902719784846e-28,True
+6,debt_ratio,K-S p_value,0.05,2.559025281433342e-21,True
+6,credit_history,K-S p_value,0.05,1.3914606404634052e-22,True
+6,region,jensenshannon,0.1,0.01783945197753825,False

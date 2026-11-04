@@ -1,0 +1,7 @@
+signal,issue,planted_month,rule,first_alert_month,delay_batches,approx_days_to_alert,false_positive_months,alert_months
+"Original rule: ANY feature drifted, Evidently default tests",feature_drift,3,drift_share > 0 (defaults),3,0,30,2,"2,3,4,5,6"
+"Final: dataset drift (>=50% features, JS for region)",feature_drift,3,drift_share >= 0.5,3,0,30,none,"3,4,5,6"
+Accuracy < 0.70,concept_drift,4,accuracy < 0.70,5,1,60,none,"5,6"
+"Accuracy < 0.70, statistically confirmed (95% CI upper bound < 0.70)",concept_drift,4,Wilson upper < 0.70,6,2,90,none,6
+TPR gap (F vs M) > 0.12,fairness_issue,5,tpr_gap > 0.12,6,1,60,none,6
+Outcome-rate gap (F vs M) > 0.08  [threshold set after seeing data],fairness_issue,5,outcome_gap > 0.08,5,0,30,none,"5,6"

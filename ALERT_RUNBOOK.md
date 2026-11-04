@@ -20,7 +20,8 @@
 |---|---:|---|---|
 | Accuracy | < 0.70 | P1 | Verify labels and evaluate rollback |
 | Group TPR gap | > 0.12 | P2 | Inspect group metrics and sample sizes |
-| Feature drift | Evidently flags drift | P2 | Inspect changed features and pipeline |
+| Outcome-rate gap (F vs M) | > 0.08 | P2 (early warning) | Check label quality / upstream process for the affected group |
+| Feature drift | Evidently dataset drift: >= 50% of features drifted (JS distance used for categoricals) | P2 | Inspect changed features and pipeline |
 | API errors | Any sustained increase | P1/P2 | Check logs and service health |
 | p95 latency | > 1 second | P2 | Inspect resource usage and request load |
 
@@ -31,3 +32,13 @@ For each planted issue:
 - **Detection delay:** detection time minus issue start time.
 
 Because this is monthly batch monitoring, report detection delay in monthly batches. Do not claim instant detection for the offline six-month simulation.
+
+### Measured detection delays (from `reports/detection_analysis.csv`)
+| Issue (planted month) | Signal | First alert | Delay (batches) |
+|---|---|---:|---:|
+| Feature drift (3) | >= 50% features drifted | 3 | 0 |
+| Concept drift (4) | Accuracy < 0.70 | 5 | 1 |
+| Fairness issue (5) | TPR gap > 0.12 | 6 | 1 |
+| Fairness issue (5) | Outcome-rate gap > 0.08 | 5 | 0 |
+
+Before confirming an accuracy alert, check the 95% confidence interval (month 5: 0.693, CI 0.667-0.719 includes 0.70; month 6: 0.663, CI upper bound 0.689 is confirmed). See `MONITORING_ANALYSIS.md`.

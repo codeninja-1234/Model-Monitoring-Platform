@@ -1,0 +1,3 @@
+configuration,true_pos,false_pos,false_neg,true_neg,precision,recall
+Evidently defaults (chi-square for region),15,4,1,5,0.789,0.938
+Final (Jensen-Shannon for region),15,1,1,8,0.938,0.938

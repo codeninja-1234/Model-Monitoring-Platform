@@ -37,6 +37,14 @@ python monitor.py
 ```
 Outputs are saved under `reports/`. Open `reports/drift_month_4.html` in a browser to inspect a drift report. `monthly_metrics.csv` contains the six-month metric trend.
 
+## 3b. Analyse and validate the monitoring results
+```bash
+python analyze_results.py     # validation, fairness table, detection delays, charts
+python -m pytest -q           # unit and sanity tests
+```
+Creates `reports/figures/*.png`, `reports/detection_analysis.csv`, `reports/fairness_detail.csv`,
+`reports/validation_checks.csv`, `reports/monitoring_summary.json`. Findings are written up in `MONITORING_ANALYSIS.md`.
+
 ## 4. Run the prediction API locally
 In a terminal:
 ```bash
@@ -44,11 +52,11 @@ python app.py
 ```
 In another terminal, test it:
 ```bash
-curl -X POST http://localhost:5000/predict \
+curl -X POST http://localhost:5001/predict \
   -H "Content-Type: application/json" \
   -d '{"age":35,"income":65000,"debt_ratio":0.25,"credit_history":8,"region":"South"}'
 ```
-Metrics: http://localhost:5000/metrics
+Metrics: http://localhost:5001/metrics
 
 ## 5. Start Prometheus and Grafana
 Docker Compose builds and runs the model API, Prometheus and Grafana:
@@ -58,7 +66,7 @@ docker compose up --build -d
 Open:
 - Grafana: http://localhost:3000 (login: admin / admin)
 - Prometheus: http://localhost:9090
-- Model API: http://localhost:5000/health
+- Model API: http://localhost:5001/health
 
 Send several test predictions using the curl command above, then refresh Grafana. Prometheus scrapes the API every five seconds.
 
