@@ -28,7 +28,7 @@ Prometheus evaluates the three model-quality rules every five seconds and requir
 | p95 latency | > 1 second | P2 | Inspect resource usage and request load |
 | Latest monthly accuracy | < 0.70 for 1 minute | P1 / `ModelAccuracyDegraded` | Verify labels and evaluate rollback |
 | Latest monthly group TPR gap | > 0.12 for 1 minute | P2 / `FairnessViolation` | Inspect group metrics and sample sizes |
-| Latest monthly drifted-feature share | > 0 for 1 minute | P2 / `FeatureDriftDetected` | Inspect the month’s Evidently report and data pipeline |
+| Latest monthly drifted-feature share | >= 0.5 for 1 minute | P2 / `FeatureDriftDetected` | Inspect the month’s Evidently report and data pipeline |
 | API errors | Dashboard signal; no alert rule | Informational | Check container logs and service health |
 | p95 latency | Dashboard signal; no alert rule | Informational | Inspect resource usage and request load |
 
