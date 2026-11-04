@@ -17,6 +17,10 @@ ERRORS = Counter("model_prediction_errors_total", "Prediction errors")
 ACCURACY = Gauge("model_monitor_accuracy", "Model accuracy by simulation month", ["month"])
 FAIRNESS_GAP = Gauge("model_monitor_fairness_gap", "Fairness TPR gap by simulation month", ["month"])
 DRIFT_SHARE = Gauge("model_monitor_drift_share", "Share of drifted features by simulation month", ["month"])
+LATEST_MONTH = Gauge("model_monitor_latest_month", "Latest evaluated simulation month")
+LATEST_ACCURACY = Gauge("model_monitor_latest_accuracy", "Accuracy for the latest evaluated month")
+LATEST_FAIRNESS_GAP = Gauge("model_monitor_latest_fairness_gap", "Fairness TPR gap for the latest evaluated month")
+LATEST_DRIFT_SHARE = Gauge("model_monitor_latest_drift_share", "Share of drifted features in the latest evaluated month")
 
 try:
     results = pd.read_csv("reports/monthly_metrics.csv")
@@ -24,8 +28,15 @@ try:
         month = str(int(row["month"]))
         ACCURACY.labels(month=month).set(float(row["accuracy"]))
         FAIRNESS_GAP.labels(month=month).set(float(row["fairness_gap"]))
+        LATEST_MONTH.set(float(row["month"]))
+        LATEST_ACCURACY.set(float(row["accuracy"]))
+        LATEST_FAIRNESS_GAP.set(float(row["fairness_gap"]))
         if pd.notna(row["evidently_drift_share"]):
-            DRIFT_SHARE.labels(month=month).set(float(row["evidently_drift_share"]))
+            drift_share = float(row["evidently_drift_share"])
+            DRIFT_SHARE.labels(month=month).set(drift_share)
+            LATEST_DRIFT_SHARE.set(drift_share)
+        else:
+            LATEST_DRIFT_SHARE.set(float("nan"))
     print("Six-month model monitoring metrics loaded.")
 except Exception as exc:
     print("Could not load monitoring results:", exc)
